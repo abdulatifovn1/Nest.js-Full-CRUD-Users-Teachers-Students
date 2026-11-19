@@ -10,7 +10,7 @@ export class UsersService {
   }
 
   async findAll() {
-    const response = await pool.query('select * from users')
+    const response = await pool.query('select * from staff')
     return response.rows
   }
 
