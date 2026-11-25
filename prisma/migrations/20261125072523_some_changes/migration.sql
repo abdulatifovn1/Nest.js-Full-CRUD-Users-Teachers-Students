@@ -1,0 +1,12 @@
+/*
+  Warnings:
+
+  - Made the column `fullname` on table `students` required. This step will fail if there are existing NULL values in that column.
+  - Made the column `fullname` on table `users` required. This step will fail if there are existing NULL values in that column.
+
+*/
+-- AlterTable
+ALTER TABLE "students" ALTER COLUMN "fullname" SET NOT NULL;
+
+-- AlterTable
+ALTER TABLE "users" ALTER COLUMN "fullname" SET NOT NULL;

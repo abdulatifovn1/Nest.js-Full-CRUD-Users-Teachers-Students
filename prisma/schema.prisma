@@ -10,9 +10,32 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  name      String?
-  age       Int?
+  fullname  String
+  password  String   
+  role      String   @default("admin")
   createdAt DateTime @default(now())
 
   @@map("users")
+}
+
+model Teacher {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  fullname  String
+  password  String   
+  role      String   @default("teacher")
+  createdAt DateTime @default(now())
+
+  @@map("teachers")
+}
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  fullname  String
+  password  String   
+  role      String   @default("student")
+  createdAt DateTime @default(now())
+
+  @@map("students")
 }

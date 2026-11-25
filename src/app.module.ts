@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { createObserveModule } from '@nestjs/observe';
-import { UsersModule } from './users/users.module.js';
-import { TeachersModule } from './teachers/teachers.module.js';
-import { StudentsModule } from './students/students.module.js';
-import { PrismaModule } from './prisma/prisma.module.js';
+import { UsersModule } from './modules/users/users.module.js';
+import { TeachersModule } from './modules/teachers/teachers.module.js';
+import { StudentsModule } from './modules/students/students.module.js';
+import { PrismaModule } from './core/prisma/prisma.module.js';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
