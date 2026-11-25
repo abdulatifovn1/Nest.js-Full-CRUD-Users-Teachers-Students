@@ -12,7 +12,8 @@ export class TeachersService {
         const {email, password, fullname} = data
         const existAdmin = await this.prismaService.user.findUnique({where: {email}})
         const existTeacher = await this.prismaService.teacher.findUnique({where: {email}})
-        const existUser = existAdmin || existTeacher
+        const existStudent = await this.prismaService.student.findUnique({where: {email}})
+        const existUser = existAdmin || existTeacher || existStudent
         if (existUser){
             throw new ConflictException("User already exists with this email")
         }
@@ -47,13 +48,6 @@ export class TeachersService {
         if(!teacherFound){
             throw new NotFoundException(`Teacher with ID ${id} is not found`)
         }
-        const {email} = teacherFound
-        const existAdmin = await this.prismaService.user.findUnique({where: {email}})
-        const existTeacher = await this.prismaService.teacher.findUnique({where: {email}})
-        const existUser = existAdmin || existTeacher
-        if (existUser){
-            throw new ConflictException("User already exists with this email")
-        }
 
         const updateData: {
             email?: string;
@@ -62,6 +56,14 @@ export class TeachersService {
         } = {};
 
         if (data.email !== undefined) {
+            const {email} = teacherFound
+            const existAdmin = await this.prismaService.user.findUnique({where: {email}})
+            const existTeacher = await this.prismaService.teacher.findUnique({where: {email}})
+            const existStudent = await this.prismaService.student.findUnique({where: {email}})
+            const existUser = existAdmin || existTeacher || existStudent
+            if (existUser){
+                throw new ConflictException("User already exists with this email")
+            }
             updateData.email = data.email;
         }
         if (data.fullname !== undefined) {

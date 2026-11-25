@@ -12,7 +12,8 @@ export class UsersService {
         const {email, password, fullname} = data
         const existAdmin = await this.prismaService.user.findUnique({where: {email}})
         const existTeacher = await this.prismaService.teacher.findUnique({where: {email}})
-        const existUser = existAdmin || existTeacher
+        const existStudent = await this.prismaService.student.findUnique({where: {email}})
+        const existUser = existAdmin || existTeacher || existStudent
         if (existUser){
             throw new ConflictException("User already exists with this email")
         }
@@ -42,37 +43,39 @@ export class UsersService {
     }})
   }
 
-  async update(id: number, data: UpdateUserDto) {
-    const userFound = await this.prismaService.user.findUnique({where: {id}})
-    if(!userFound){
-      throw new NotFoundException(`User with ID ${id} is not found`)
-    }
-    const {email} = userFound
-    const existAdmin = await this.prismaService.user.findUnique({where: {email}})
-    const existTeacher = await this.prismaService.teacher.findUnique({where: {email}})
-    const existUser = existAdmin || existTeacher
-    if (existUser){
-        throw new ConflictException("User already exists with this email")
-    }
+    async update(id: number, data: UpdateUserDto) {
+        const userFound = await this.prismaService.user.findUnique({where: {id}})
+        if(!userFound){
+        throw new NotFoundException(`User with ID ${id} is not found`)
+        }
 
-    const updateData: {
-        email?: string;
-        fullname?: string;
-        password?: string;
-    } = {};
+        const updateData: {
+            email?: string;
+            fullname?: string;
+            password?: string;
+        } = {};
 
-    if (data.email !== undefined) {
-        updateData.email = data.email;
-    }
-    if (data.fullname !== undefined) {
-        updateData.fullname = data.fullname;
-    }
-    if (data.password !== undefined) {
-        updateData.password = await argon.hash(data.password);
-    }
+        if (data.email !== undefined) {
+            const {email} = userFound
+            const existAdmin = await this.prismaService.user.findUnique({where: {email}})
+            const existTeacher = await this.prismaService.teacher.findUnique({where: {email}})
+            const existStudent = await this.prismaService.student.findUnique({where: {email}})
+            const existUser = existAdmin || existTeacher || existStudent
+            if (existUser){
+                throw new ConflictException("User already exists with this email")
+            }
+            updateData.email = data.email;
+        }
 
-    return this.prismaService.user.update({where:{id},data: updateData})
-  }
+        if (data.fullname !== undefined) {
+            updateData.fullname = data.fullname;
+        }
+        if (data.password !== undefined) {
+            updateData.password = await argon.hash(data.password);
+        }
+
+        return this.prismaService.user.update({where:{id},data: updateData})
+    }
 
   async remove(id: number) {
     const userFound = await this.findOne(id)

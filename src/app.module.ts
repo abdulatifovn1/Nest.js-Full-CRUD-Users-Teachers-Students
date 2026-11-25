@@ -4,6 +4,9 @@ import { UsersModule } from './modules/users/users.module.js';
 import { TeachersModule } from './modules/teachers/teachers.module.js';
 import { StudentsModule } from './modules/students/students.module.js';
 import { PrismaModule } from './core/prisma/prisma.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
+
+
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -13,7 +16,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
   UsersModule,
   TeachersModule,
   StudentsModule,
-  PrismaModule
+  PrismaModule,
+  AuthModule
 ],
   controllers: [],
   providers: [],
